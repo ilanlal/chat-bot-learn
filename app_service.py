@@ -1,5 +1,5 @@
 from services.google_spreadsheets import get_answers_list, find_answer_by_question, find_suggestions_by_question, find_links_by_question, get_links_list, get_suggestions_list
-from difflib import get_close_matches
+from cydifflib import get_close_matches
 
 def get_answer(question:str) -> str | None:
     kb:[str] = get_answers_list()

@@ -1,0 +1,5 @@
+difflib
+flask
+gspread
+googlesearch
+gunicorn

@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . ./
 
-RUN pip install flask gunicorn difflib googlesearch gspread
+RUN pip install flask gunicorn googlesearch-python gspread cydifflib
 
 CMD gunicorn --bind :$PORT app:app
