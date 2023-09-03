@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',
+    filename=
+    'styles/style.css')}}">
+    <title>🥇 צאטבוט - ישראלי 🥇</title>
+</head>
+
+<body>
+    <header>
+        <h1>🟢 אילן ללום</h1>
+    </header>
+    <main>
+        <div id="chatbox"></div>
+    </main>
+    <footer>
+        <div id="ribbon">
+            <input type="text" onkeyup="onTextChange()" id="userInput" placeholder="שאל אותי כל דבר...">
+            <button type="button" onclick="sendMessage()">🌞</button>
+        </div>
+    </footer>
+
+    <script>
+        function getGoogleSearch(question, limit = 1) {
+            var userInput = question || getUserInput(true);
+            if (!userInput)
+                return;
+
+            fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'message': userInput, 'limit': limit }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    getGoogleSearchCallback(data, limit);
+                })
+        }
+
+        function getGoogleSearchCallback(data, limit = 1) {
+            console.log("getGoogleSearchCallback", data);
+            if (!data.response)
+                return;
+
+            var chatbox = document.getElementById('chatbox');
+            var divHtml = '<span class="google-wrapper">';
+            if (data.response) {
+                var results = data.response;
+                for (var i = 0; i < limit && i < results.length; i++) {
+                    divHtml += '<span class="google">';
+                    //divHtml += '<a href="' + results[i].url + '" target="_blank">' + results[i].title + ':</a>';
+                    divHtml += '<a href="#footer" onclick="getGoogleSearch(\'' + results[i].title.replaceAll('\'', '').replaceAll('\"', '') + '\', 5)">' + results[i].title + '</a>';
+                    divHtml += '<span class="description">' + results[i].description + '</span>';
+                    divHtml += '</span>';
+                };
+            }
+            divHtml += '</span>';
+            chatbox.innerHTML += divHtml;
+
+            window.scrollBy(0, 300);
+        }
+
+        function getSuggestions(question) {
+            var userInput = question || getUserInput(true);
+            if (!userInput)
+                return;
+
+            fetch('/api/suggestions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'message': userInput }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    getSuggestionsCallback(data);
+                });
+        }
+
+        function getSuggestionsCallback(data) {
+            console.log("getSuggestionsCallback", data);
+            if (!data.suggestions || data.suggestions.length == 0)
+                return;
+
+            var chatbox = document.getElementById('chatbox');
+            var divHtml = '<ul class="suggestions-wrapper">';
+            if (data.suggestions) {
+                var suggestions = data.suggestions;
+                //divHtml += '<span>';
+                for (var i = 0; i < suggestions.length; i++) {
+                    divHtml += '<li class="suggestion">';
+                    divHtml += '<a href="#footer" onclick="sendMessage(\'' + suggestions[i].suggestion.replaceAll('\'', '').replaceAll('\"', '') + '\')">';
+                    divHtml += '<span class="emoji">🟣</span>';
+                    divHtml += suggestions[i].suggestion + '</a>';
+                    divHtml += '</li>';
+                }
+                //divHtml += '</span>';
+            }
+            divHtml += '</ul>';
+            chatbox.innerHTML += divHtml;
+            window.scrollBy(0, 300);
+        }
+
+        function getLinks(question) {
+            var userInput = question || getUserInput(true);
+            if (!userInput)
+                return;
+
+            fetch('/api/links', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'message': userInput }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    getLinksCallback(data);
+                });
+        }
+
+        function getLinksCallback(data) {
+            console.log("getLinksCallback", data);
+            if (!data.links)
+                return;
+            var chatbox = document.getElementById('chatbox');
+            var divHtml = '<span class="links-wrapper">';
+            if (data.links) {
+                var links = data.links;
+                //divHtml += '<span>';
+                for (var i = 0; i < links.length; i++) {
+                    divHtml += '<span class="link">';
+                    divHtml += '<a href="' + links[i].url + '" target="_blank">' + links[i].title + '</a>';
+                    divHtml += '<i class="emoji">📍</i>';
+                    divHtml += '</span>';
+                }
+                //divHtml += '</span>';
+            }
+            divHtml += '</span>';
+            chatbox.innerHTML += divHtml;
+        }
+
+        function sendMessage(question) {
+            var userInput = question || getUserInput(true);
+            if (!userInput)
+                return;
+
+            writeQuestion(userInput);
+
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'message': userInput }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    sendMessageCallback(data, userInput);
+                })
+        }
+
+        function sendMessageCallback(data, userInput) {
+            console.log("sendMessageCallback", data);
+
+            if (data.response) {
+                getSuggestions(data.response.question);
+
+                if (data.response && data.response.answer)
+                    writeAnswer(data.response.answer);
+
+                if (data.response && data.response.seo)
+                    getGoogleSearch(data.response.seo, 5);
+            }
+            else {
+                var words = userInput.split(' ');
+                if (words.length <= 1) {
+                    getGoogleSearch('מה זה: ' + userInput + '?', 5);
+                } else if (words.length <= 2) {
+                    getGoogleSearch('+' + userInput + '?', 5);
+                    //getGoogleSearch('ביקורת לגבי: ' + userInput + '?', 2);
+                }
+                else {
+                    getGoogleSearch('מידע לגבי: ' + userInput + '?', 5);
+                }
+
+            }
+        }
+
+        function writeAnswer(answer) {
+            var chatbox = document.getElementById('chatbox');
+            var divHtml = '<span class="answer">';
+            divHtml += ('<span class="text-message">' + answer + '</span>');
+            divHtml += '</span>';
+            chatbox.innerHTML += divHtml;
+            window.scrollBy(0, 300);
+        }
+
+        function writeQuestion(question) {
+            var chatbox = document.getElementById('chatbox');
+            var questionHtml = '<span class="question">';
+            questionHtml += '<i class="emoji"></i>';
+            questionHtml += '<span class="message">' + question + '</span>';
+            questionHtml += '</span>';
+            chatbox.innerHTML += questionHtml;
+            window.scrollBy(0, 300);
+        }
+
+        function onBotError(e) {
+            console.error(e);
+            var divHtml = '<span class="answer">';
+            divHtml += ('<span class="text-message">אופס, קרתה תקלה. נסה שוב מאוחר יותר.</span>');
+            divHtml += '<span class="error-message">' + e + '</span>';
+            divHtml += '</span>';
+            chatbox.innerHTML += divHtml;
+            window.scrollBy(0, 300);
+        }
+
+        function onTextChange() {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        }
+
+        function getUserInput(clear = false) {
+            var userInputElement = document.getElementById('userInput')
+            var userInput = userInputElement.value;
+
+            if (clear)
+                userInputElement.value = '';
+
+            return userInput;
+        }
+
+        (function () {
+            try {
+                sendMessage("שלום");
+            }
+            catch (e) {
+                onBotError(e);
+            }
+        })();
+    </script>
+    <input type="hidden" value="//⁉❓❔ 💫 ✅✔🟡🔵🟢🟠🔴🟣🔲" />
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+credentials.json
+__pycache__
+.hintrc
+data/kb_main.json
+data/kb_new.json
+templates/form.html
