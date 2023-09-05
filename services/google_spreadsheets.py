@@ -28,7 +28,7 @@ def get_answers_list():
     #build the knowledge base full data answer
     questions = []
     for row in answers_data:
-        questions.append({"question":row[0],"seo":row[1] or None,"answer":row[2]})
+        questions.append({"question":row[0],"answer":row[1],"seo":row[2] or None})
     
     return questions
 

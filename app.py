@@ -11,11 +11,14 @@ def form():
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    data = request.get_json()
-    question = data['message']
-    bot_response = get_answer(question)
+    try:
+        data = request.get_json()
+        question = data['message']
+        bot_response = get_answer(question=question,n=3,cutoff=0.5)
 
-    return jsonify({'response': bot_response})
+        return jsonify({'response': bot_response})
+    except:
+        return jsonify({'response': None })
 
 @app.route('/api/suggestions', methods=['POST'])
 def suggestions():

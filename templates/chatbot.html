@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="he">
 
 <head>
@@ -6,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
 
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',
-    filename=
-    'styles/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/style.css')}}">
     <title>🥇 צאטבוט - ישראלי 🥇</title>
 </head>
 
@@ -17,15 +14,22 @@
         <h1>🟢 אילן ללום</h1>
     </header>
     <main>
-        <div id="chatbox"></div>
+        <div id="chatbox-top"></div>
+        <div id="chatbox">
+
+        </div>
+        <div id="chatbox-bottom"></div>
+        <span class="floating-scroll-bottons">
+            <a href="#chatbox-top">🔝</a>
+            <a href="#chatbox-bottom">⏬</a>
+        </span>
     </main>
     <footer>
         <div id="ribbon">
-            <input type="text" onkeyup="onTextChange()" id="userInput" placeholder="שאל אותי כל דבר...">
-            <button type="button" onclick="sendMessage()">🌞</button>
+            <input type="text" onkeyup="onTextChange()" id="userInput" placeholder="שאלו אותי כל שאלה...">
+            <button type="button" onclick="sendMessage()">◀</button>
         </div>
     </footer>
-
     <script>
         function getGoogleSearch(question, limit = 1) {
             var userInput = question || getUserInput(true);
@@ -98,8 +102,8 @@
                 //divHtml += '<span>';
                 for (var i = 0; i < suggestions.length; i++) {
                     divHtml += '<li class="suggestion">';
-                    divHtml += '<a href="#footer" onclick="sendMessage(\'' + suggestions[i].suggestion.replaceAll('\'', '').replaceAll('\"', '') + '\')">';
-                    divHtml += '<span class="emoji">🟣</span>';
+                    divHtml += '<a href="#footer" onclick="sendMessage(\'' + suggestions[i].suggestion.replaceAll('\'', '').replaceAll('\"', '') + '\',false)">';
+                    divHtml += '<span class="emoji">ℹ</span>';
                     divHtml += suggestions[i].suggestion + '</a>';
                     divHtml += '</li>';
                 }
@@ -149,12 +153,13 @@
             chatbox.innerHTML += divHtml;
         }
 
-        function sendMessage(question) {
+        function sendMessage(question, writeMessage = true) {
             var userInput = question || getUserInput(true);
             if (!userInput)
                 return;
 
-            writeQuestion(userInput);
+            if (writeMessage)
+                writeQuestion(userInput);
 
             fetch('/api/chat', {
                 method: 'POST',
@@ -167,6 +172,9 @@
                 .then(data => {
                     sendMessageCallback(data, userInput);
                 })
+                .catch((error) => {
+                    onBotError(error);
+                });
         }
 
         function sendMessageCallback(data, userInput) {

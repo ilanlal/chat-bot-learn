@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . ./
 
-RUN pip install flask gunicorn googlesearch-python gspread cydifflib
+RUN pip install flask gunicorn googlesearch-python gspread cydifflib oauth2client
 
 CMD gunicorn --bind :$PORT app:app

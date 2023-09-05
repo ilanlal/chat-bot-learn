@@ -8,35 +8,35 @@ html * {
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #222;
   color: #FFF;
+  overflow-x: hidden;
 }
 
 header {
   background-color: #333;
   color: white;
-  padding: 10px;
+  padding: 10px 4px 10px 0;
   text-align: right;
 }
 
 header h1 {
   font-size: 0.9em;
+  font-weight: lighter;
   margin: 0;
   padding: 0;
   display: inline-block;
 }
 
 main {
-  padding: 20px;
-  margin: 0 0 80px 0;
+  margin-bottom:80px;
   font-size: 1em;
 }
 
 footer {
   background-color: #333;
-  color: white;
-  padding: 10px;
+  padding: 8px 0;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -44,33 +44,58 @@ footer {
 }
 
 input[type="text"] {
-  padding: 10px;
+  padding: 6px 8px;
   color: #000;
   border-radius: 5px;
-  border: 1px solid #000;
-  width: 60%;
+  border: 1px solid #00F;
+  width: 50%;
+  font-size: 1.1em;
   display: inline-block;
 }
 
 button {
-  margin: 10px;
-  padding: 10px;
+  padding: 6px 12px 6px 9px; 
   border-radius: 5px;
-  background-color: #5abb0b;
+  background-color: #04F;
   cursor: pointer;
   display: inline-block;
   font-size: 1.2em;
+  vertical-align: middle;
+  border:1px solid #000;
+}
+
+.floating-scroll-bottons {
+  display: inline-block;
+  min-height: 80px;
+  position: fixed;
+  bottom: 16px;
+  right: 4px;
+  z-index: 100;
+  opacity: 0.3;
+  cursor: pointer;
+  font-size: 1.8em;
+  margin-top: 20px;
+}
+
+.floating-scroll-bottons:hover {
+  opacity: 1;
+}
+
+.floating-scroll-bottons a {
+  display: block;
+  margin: 0 0;
+  padding: 0;
+  text-decoration: none;
 }
 
 .question {
   font-size: 1em;
-  background-color: #5abb0b;
-  margin: 2px;
-  padding: 2px 8px;
+  background-color: #497;
+  margin: 6px 4px;
+  padding: 6px 8px;
   border-radius: 8px 2px 3px 0;
   display: inline-block;
 }
-
 .question .message {
   padding: 0 12px 0 8px;
   background-color: inherit;
@@ -78,52 +103,53 @@ button {
 
 .answer {
   display: block;
-  margin: 4px 20px 4px 0;
-  font-size: 1.1em;
+  margin: 2px 10px;
+  font-size: 1em;
 }
 
 .answer .text-message {
-  padding: 4px 8px;
+  padding: 10px 8px;
+  margin: 2px 10px;
   border-radius: 8px 0 4px 0;
-  background-color: #3682cf;
-  box-shadow: 4px 0 1px #e3e3ee;
+  background-color: #333;
+  color: #EEE;
+  font-weight: 500;
   display: inline-block;
 }
 
 .suggestions-wrapper {
   display: block;
-  margin: 5px 20px 5px 0;
-  box-shadow: 4px 0 0 #e3e3ee;
-  padding: 4px 8px;
-  background-color: inherit;
-  border-radius: 8px 0 4px 0;
-  width: 100%;
+  margin: 0 10px;
+  padding: 0 4px;
+  width: auto;
+
 }
 
 .suggestions-wrapper .suggestion {
-  color: #DDD;
-  box-shadow: 0 0 1px #e3e3ee;
-  font-size: xx-small;
-  margin: 2px 6px 2px 0;
-  padding: 2px 6px;
-  border-radius: 5px 0 5px 0;
-  background-color: inherit;
+  font-size: 0.9em;
+  margin: 1px 10px;
+  padding: 2px;
+  background-color: #111;
+  border-radius: 0 0 4px 0;
   display: inline-block;
   width: auto;
 }
 
 a .emoji {
-  padding-left: 8px;
-  background-color: inherit;
+  color: #39F;
+  padding: 2px 4px;
+  margin: 4px;
   text-decoration: none;
 }
 
 .suggestion a {
   display: inline-block;
-  color: #CCC;
+  color: #29F;
   background-color: inherit;
   cursor: pointer;
   text-decoration: none;
+  font-weight: 500;
+  padding-left: 8px;
 }
 
 .link {

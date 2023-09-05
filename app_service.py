@@ -1,14 +1,14 @@
 from services.google_spreadsheets import get_answers_list, find_answer_by_question, find_suggestions_by_question, find_links_by_question, get_links_list, get_suggestions_list
 from cydifflib import get_close_matches
 
-def get_answer(question:str) -> str | None:
+def get_answer(question:str,n:int=3, cutoff:float=0.6) -> str | None:
     kb:[str] = get_answers_list()
     
     matches: list[str] = get_close_matches(
         word=question,
         possibilities=[q["question"] for q in kb],
-        n=3,
-        cutoff=0.6)
+        n=n,
+        cutoff=cutoff)
     
     if matches:
         # return result from question knowledge base
