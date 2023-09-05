@@ -4,14 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
-
+    
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/style.css')}}">
-    <title>🥇 צאטבוט - ישראלי 🥇</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static',filename='images/favicon.ico')}}">
+
+    <title>🟢 - שרון (צאטבוט)</title>
 </head>
 
 <body>
     <header>
-        <h1>🟢 אילן ללום</h1>
+        <h1>🟢 שרון (צאטבוט)</h1>
     </header>
     <main>
         <div id="chatbox-top"></div>
@@ -251,7 +253,7 @@
 
         (function () {
             try {
-                sendMessage("שלום");
+                sendMessage("שלום היי");
             }
             catch (e) {
                 onBotError(e);
