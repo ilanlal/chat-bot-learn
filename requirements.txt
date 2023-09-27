@@ -1,5 +1,5 @@
 difflib
 flask
 gspread
-googlesearch
+googlesearch-python
 gunicorn
